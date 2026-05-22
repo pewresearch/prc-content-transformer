@@ -61,17 +61,50 @@ class Email_Provider implements Provider {
 	/**
 	 * Post-process: strip any markdown code fences the AI might wrap around HTML.
 	 *
+	 * Handles common AI output patterns independently rather than requiring the
+	 * fence to wrap the entire output:
+	 *  - Full wrap:     ```html\n...\n```
+	 *  - Opening only:  ```html\n...   (AI forgets closing fence)
+	 *  - Case variants: ```HTML
+	 *
 	 * @param string $output The raw AI output.
 	 * @return string
 	 */
 	public function post_process( string $output ): string {
 		$output = trim( $output );
 
-		if ( preg_match( '/^```(?:html)?\s*\n?(.*?)\n?```$/s', $output, $matches ) ) {
-			$output = $matches[1];
+		// Strip opening code fence (```html, ```HTML, or bare ```) from start.
+		$output = preg_replace( '/^```(?:html|HTML)?\s*\n?/', '', $output );
+
+		// Strip closing code fence from end.
+		$output = preg_replace( '/\n?```\s*$/', '', $output );
+
+		$output = trim( (string) $output );
+
+		// Replace any literal spacer tokens the model left in place (table-safe).
+		$output = preg_replace_callback(
+			'/\{\{PRC_EMAIL_SPACER\s+height="(\d+(?:\.\d+)?)px"\}\}/',
+			static function ( array $m ): string {
+				$h = (int) max( 1, min( 500, (int) ceil( (float) $m[1] ) ) );
+				return '<table width="100%" cellpadding="0" cellspacing="0" border="0" role="presentation">'
+					. '<tr><td height="' . $h . '" style="height:' . $h . 'px;line-height:' . $h . 'px;font-size:0;">&nbsp;</td></tr></table>';
+			},
+			$output
+		);
+
+		// If typography wrappers leaked through, strip markers (keep inner content) and warn.
+		if ( str_contains( $output, '{{PRC_EMAIL_TYPOGRAPHY' ) || str_contains( $output, '{{/PRC_EMAIL_TYPOGRAPHY}}' ) ) {
+			if ( function_exists( 'do_action' ) ) {
+				do_action(
+					'qm/warn',
+					'Email HTML output contained unresolved {{PRC_EMAIL_TYPOGRAPHY}} markers; stripped before send.'
+				);
+			}
+			$output = preg_replace( '/\{\{PRC_EMAIL_TYPOGRAPHY[^}]+\}\}\s*/', '', $output );
+			$output = preg_replace( '/\s*\{\{\/PRC_EMAIL_TYPOGRAPHY\}\}/', '', $output );
 		}
 
-		return trim( $output );
+		return trim( (string) $output );
 	}
 
 	public function is_available(): bool {

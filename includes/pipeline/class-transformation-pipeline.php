@@ -100,8 +100,15 @@ class Transformation_Pipeline {
 		self::ensure_provider_authentication();
 
 		// Step 1: Convert post to markdown.
+		// Signal the current provider slug to block-markdown callbacks so they
+		// can branch their output (e.g. charts emit a PNG image in email context
+		// rather than a data table).
+		do_action( 'prc_markdown_for_agents_set_context', $provider->get_slug() );
+
 		$converter = new Markdown_Converter();
 		$markdown  = $converter->post_to_markdown( $post );
+
+		do_action( 'prc_markdown_for_agents_clear_context' );
 
 		if ( empty( $markdown ) ) {
 			return new Transformation_Result(
