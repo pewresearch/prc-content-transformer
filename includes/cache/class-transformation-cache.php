@@ -104,7 +104,9 @@ class Transformation_Cache {
 		string $post_content,
 		Transformation_Result $result
 	): void {
-		update_post_meta( $post_id, self::result_key( $provider_slug ), $result->to_array() );
+		// wp_slash() counteracts wp_unslash() inside update_post_meta so backslashes
+		// in the JSON output (e.g. \" escaping quotes in href attributes) survive the round-trip.
+		update_post_meta( $post_id, self::result_key( $provider_slug ), wp_slash( $result->to_array() ) );
 		update_post_meta( $post_id, self::hash_key( $provider_slug ), md5( $post_content ) );
 	}
 

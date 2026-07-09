@@ -1,0 +1,17 @@
+{
+	"name": "pewresearch/prc-content-transformer",
+	"type": "wordpress-plugin",
+	"description": "AI-powered content transformation middleware for PRC Platform.",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.2"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^9.6"
+	},
+	"config": {
+		"platform": {
+			"php": "8.4.0"
+		}
+	}
+}

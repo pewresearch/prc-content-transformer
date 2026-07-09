@@ -87,4 +87,28 @@ CRITICAL RULES:
 			$error_context
 		);
 	}
+
+	/**
+	 * Build a user prompt for transforming a markdown fragment into ANF components.
+	 *
+	 * @param string   $markdown Markdown fragment for one unhandled block run.
+	 * @param Provider $provider The target provider.
+	 * @return string
+	 */
+	public static function build_fragment_prompt( string $markdown, Provider $provider ): string {
+		$prompt = sprintf(
+			"Transform the following Markdown fragment into %s format.\n\nOutput type: json array of ANF component objects\n\nIMPORTANT: Output ONLY a JSON array of Apple News Format component objects. Do not wrap the array in a full ANF document. Do not include markdown code fences.\n\n---\n\n%s",
+			$provider->get_name(),
+			$markdown
+		);
+
+		/**
+		 * Filter the fragment prompt for a content transformation.
+		 *
+		 * @param string   $prompt   The fragment prompt.
+		 * @param string   $markdown The source markdown fragment.
+		 * @param Provider $provider The target provider.
+		 */
+		return apply_filters( 'prc_content_transformer_fragment_prompt', $prompt, $markdown, $provider );
+	}
 }
