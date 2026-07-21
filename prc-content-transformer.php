@@ -32,32 +32,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! defined( 'DEFAULT_TECHNICAL_CONTACT' ) ) {
-	define( 'DEFAULT_TECHNICAL_CONTACT', 'webdev@pewresearch.org' );
-}
-
 define( 'PRC_CONTENT_TRANSFORMER_FILE', __FILE__ );
 define( 'PRC_CONTENT_TRANSFORMER_DIR', __DIR__ );
 define( 'PRC_CONTENT_TRANSFORMER_VERSION', '1.0.0' );
-
-/**
- * The code that runs during plugin activation.
- */
-function activate() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-activator.php';
-	Plugin_Activator::activate();
-}
-
-/**
- * The code that runs during plugin deactivation.
- */
-function deactivate() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-plugin-deactivator.php';
-	Plugin_Deactivator::deactivate();
-}
-
-register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
-register_deactivation_hook( __FILE__, __NAMESPACE__ . '\deactivate' );
 
 require plugin_dir_path( __FILE__ ) . 'includes/class-bootstrap.php';
 
