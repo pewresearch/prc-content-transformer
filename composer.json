@@ -13,5 +13,10 @@
 		"platform": {
 			"php": "8.4.0"
 		}
+	},
+	"scripts": {
+		"test": [
+			"phpunit --configuration ../../tests/prc-content-transformer/phpunit/phpunit.xml.dist"
+		]
 	}
 }
