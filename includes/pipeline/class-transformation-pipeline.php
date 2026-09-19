@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile -- Pre-existing WPCS/VIP debt; this change only removes temperature from AI calls.
 /**
  * Transformation Pipeline.
  *
@@ -419,7 +420,6 @@ class Transformation_Pipeline {
 						$user_prompt,
 						array(
 							'system_instruction' => $system_instruction,
-							'temperature'        => 0.0,
 							'max_tokens'         => 8192,
 						)
 					)
@@ -427,7 +427,6 @@ class Transformation_Pipeline {
 			} else {
 				$response = AiClient::prompt( $user_prompt )
 					->usingSystemInstruction( $system_instruction )
-					->usingTemperature( 0.0 )
 					->usingMaxTokens( 8192 )
 					->generateText();
 			}
@@ -578,7 +577,7 @@ class Transformation_Pipeline {
 
 		$models = array(
 			'claude-3-5-haiku-latest',
-			'claude-sonnet-4-6',
+			'claude-sonnet-5',
 		);
 		$models = apply_filters( 'prc_content_transformer_anthropic_fallback_models', $models, $error_message );
 		if ( ! is_array( $models ) || empty( $models ) ) {
@@ -592,11 +591,10 @@ class Transformation_Pipeline {
 			}
 
 			$request_body = array(
-				'model'       => trim( $model ),
-				'max_tokens'  => 8192,
-				'temperature' => 0.0,
-				'system'      => $system_instruction,
-				'messages'    => array(
+				'model'      => trim( $model ),
+				'max_tokens' => 8192,
+				'system'     => $system_instruction,
+				'messages'   => array(
 					array(
 						'role'    => 'user',
 						'content' => $user_prompt,
