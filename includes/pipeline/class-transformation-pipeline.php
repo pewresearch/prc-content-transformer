@@ -576,12 +576,12 @@ class Transformation_Pipeline {
 		}
 
 		$models = array(
-			'claude-3-5-haiku-latest',
-			'claude-sonnet-5',
+			'claude-haiku-4-5',
+			'claude-sonnet-5-5',
 		);
 		$models = apply_filters( 'prc_content_transformer_anthropic_fallback_models', $models, $error_message );
 		if ( ! is_array( $models ) || empty( $models ) ) {
-			$models = array( 'claude-3-5-haiku-latest' );
+			$models = array( 'claude-haiku-4-5' );
 		}
 
 		$last_error = 'unknown fallback error';
