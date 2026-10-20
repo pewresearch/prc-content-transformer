@@ -127,8 +127,9 @@ class Bootstrap {
 	/**
 	 * Migrate legacy AI experiment flags to AI 0.6+ feature flags.
 	 *
-	 * AI 0.6 renamed options from `ai_experiment_*` to `wpai_feature_*` and
-	 * from `ai_experiments_enabled` to `wpai_features_enabled`.
+	 * AI 0.6 renamed options from `ai_experiment_*` to `wpai_feature_*`. AI 1.4
+	 * removed the global `wpai_features_enabled` toggle, so only the per-feature
+	 * flag is migrated.
 	 *
 	 * @hook init
 	 */
@@ -140,16 +141,6 @@ class Bootstrap {
 			$legacy_feature_value = get_option( $legacy_feature_key, null );
 			if ( null !== $legacy_feature_value ) {
 				update_option( $new_feature_key, (bool) $legacy_feature_value );
-			}
-		}
-
-		$legacy_global_key = 'ai_experiments_enabled';
-		$new_global_key    = 'wpai_features_enabled';
-
-		if ( false === get_option( $new_global_key, false ) ) {
-			$legacy_global_value = get_option( $legacy_global_key, null );
-			if ( null !== $legacy_global_value ) {
-				update_option( $new_global_key, (bool) $legacy_global_value );
 			}
 		}
 	}
