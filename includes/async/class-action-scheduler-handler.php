@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\Async
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\Async;
 
 use PRC\Platform\Content_Transformer\Pipeline\Transformation_Pipeline;
@@ -130,14 +132,6 @@ class Action_Scheduler_Handler {
 			self::fire_failure( $post_id, $provider_slug, $user_id, $result->get_error() );
 			throw new \RuntimeException( $result->get_error() );
 		}
-
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( sprintf(
-			'prc-content-transformer: async process — transformation complete for post %d / provider %s. Tokens: %d.',
-			$post_id,
-			$provider_slug,
-			$result->get_tokens_used()
-		) );
 
 		/**
 		 * Fires after a content transformation completes successfully.

@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\API
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\API;
 
 use PRC\Platform\Content_Transformer\Loader;
@@ -24,6 +26,8 @@ class REST_Controller {
 	const NAMESPACE = 'prc-content-transformer/v1';
 
 	/**
+	 * Register the REST route hook.
+	 *
 	 * @param Loader $loader Hook loader.
 	 */
 	public function __construct( Loader $loader ) {

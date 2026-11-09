@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer;
 
 /**

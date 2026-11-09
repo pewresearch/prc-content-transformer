@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\AI_Experiment
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\AI_Experiment;
 
 use WordPress\AI\Abstracts\Abstract_Feature;

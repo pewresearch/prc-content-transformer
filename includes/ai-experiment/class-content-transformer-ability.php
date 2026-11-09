@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\AI_Experiment
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\AI_Experiment;
 
 use PRC\Platform\Content_Transformer\Pipeline\Transformation_Pipeline;
@@ -133,9 +135,9 @@ class Content_Transformer_Ability {
 	 * @return array
 	 */
 	public function execute( $input ) {
-		$post_id  = $input['post_id'] ?? 0;
-		$provider = $input['provider'] ?? '';
-		$force    = $input['force'] ?? false;
+		$post_id  = (int) ( $input['post_id'] ?? 0 );
+		$provider = (string) ( $input['provider'] ?? '' );
+		$force    = (bool) ( $input['force'] ?? false );
 
 		if ( empty( $post_id ) ) {
 			return array(

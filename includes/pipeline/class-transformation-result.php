@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\Pipeline
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\Pipeline;
 
 /**
@@ -13,36 +15,50 @@ namespace PRC\Platform\Content_Transformer\Pipeline;
 class Transformation_Result {
 
 	/**
-	 * @var string The transformation status: 'success', 'failed', 'pending', 'cached'.
+	 * Transformation status: 'success', 'failed', 'pending', or 'cached'.
+	 *
+	 * @var string
 	 */
 	private $status;
 
 	/**
-	 * @var string The transformed output content.
+	 * Transformed output content.
+	 *
+	 * @var string
 	 */
 	private $output;
 
 	/**
-	 * @var string The provider slug that produced this result.
+	 * Provider slug that produced this result.
+	 *
+	 * @var string
 	 */
 	private $provider;
 
 	/**
-	 * @var int Unix timestamp of when the transformation completed.
+	 * Unix timestamp of when the transformation completed.
+	 *
+	 * @var int
 	 */
 	private $timestamp;
 
 	/**
-	 * @var int Estimated token usage for the AI call.
+	 * Estimated token usage for the AI call.
+	 *
+	 * @var int
 	 */
 	private $tokens_used;
 
 	/**
-	 * @var string Error message, if any.
+	 * Error message, if any.
+	 *
+	 * @var string
 	 */
 	private $error;
 
 	/**
+	 * Create a transformation result.
+	 *
 	 * @param string $status      The transformation status.
 	 * @param string $output      The transformed content.
 	 * @param string $provider    The provider slug.
@@ -61,35 +77,70 @@ class Transformation_Result {
 		$this->status      = $status;
 		$this->output      = $output;
 		$this->provider    = $provider;
-		$this->timestamp   = $timestamp ?: time();
+		$this->timestamp   = 0 === $timestamp ? time() : $timestamp;
 		$this->tokens_used = $tokens_used;
 		$this->error       = $error;
 	}
 
+	/**
+	 * Transformation status.
+	 *
+	 * @return string
+	 */
 	public function get_status(): string {
 		return $this->status;
 	}
 
+	/**
+	 * Transformed output content.
+	 *
+	 * @return string
+	 */
 	public function get_output(): string {
 		return $this->output;
 	}
 
+	/**
+	 * Provider slug that produced this result.
+	 *
+	 * @return string
+	 */
 	public function get_provider(): string {
 		return $this->provider;
 	}
 
+	/**
+	 * Unix timestamp of completion.
+	 *
+	 * @return int
+	 */
 	public function get_timestamp(): int {
 		return $this->timestamp;
 	}
 
+	/**
+	 * Estimated token usage.
+	 *
+	 * @return int
+	 */
 	public function get_tokens_used(): int {
 		return $this->tokens_used;
 	}
 
+	/**
+	 * Error message, or an empty string.
+	 *
+	 * @return string
+	 */
 	public function get_error(): string {
 		return $this->error;
 	}
 
+	/**
+	 * Whether the result holds usable output (fresh or cached).
+	 *
+	 * @return bool
+	 */
 	public function is_success(): bool {
 		return 'success' === $this->status || 'cached' === $this->status;
 	}
@@ -118,12 +169,12 @@ class Transformation_Result {
 	 */
 	public static function from_array( array $data ): self {
 		return new self(
-			$data['status'] ?? 'failed',
-			$data['output'] ?? '',
-			$data['provider'] ?? '',
-			$data['timestamp'] ?? 0,
-			$data['tokens_used'] ?? 0,
-			$data['error'] ?? ''
+			(string) ( $data['status'] ?? 'failed' ),
+			(string) ( $data['output'] ?? '' ),
+			(string) ( $data['provider'] ?? '' ),
+			(int) ( $data['timestamp'] ?? 0 ),
+			(int) ( $data['tokens_used'] ?? 0 ),
+			(string) ( $data['error'] ?? '' )
 		);
 	}
 }

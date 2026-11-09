@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer;
 
 use PRC\Platform\Content_Transformer\Providers\Provider_Registry;
@@ -24,26 +26,9 @@ class Bootstrap {
 	protected $loader;
 
 	/**
-	 * The unique identifier of this plugin.
-	 *
-	 * @var string
-	 */
-	protected $plugin_name;
-
-	/**
-	 * The current version of the plugin.
-	 *
-	 * @var string
-	 */
-	protected $version;
-
-	/**
 	 * Define the core functionality of the plugin.
 	 */
 	public function __construct() {
-		$this->version     = PRC_CONTENT_TRANSFORMER_VERSION;
-		$this->plugin_name = 'prc-content-transformer';
-
 		$this->load_dependencies();
 		$this->init_dependencies();
 	}
@@ -168,32 +153,5 @@ class Bootstrap {
 	 */
 	public function run() {
 		$this->loader->run();
-	}
-
-	/**
-	 * The name of the plugin.
-	 *
-	 * @return string
-	 */
-	public function get_plugin_name() {
-		return $this->plugin_name;
-	}
-
-	/**
-	 * The reference to the class that orchestrates the hooks.
-	 *
-	 * @return Loader
-	 */
-	public function get_loader() {
-		return $this->loader;
-	}
-
-	/**
-	 * Retrieve the version number of the plugin.
-	 *
-	 * @return string
-	 */
-	public function get_version() {
-		return $this->version;
 	}
 }

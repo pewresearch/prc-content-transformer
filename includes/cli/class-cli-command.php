@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\CLI
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\CLI;
 
 use PRC\Platform\Content_Transformer\Pipeline\Transformation_Pipeline;
@@ -86,7 +88,7 @@ class CLI_Command extends \WPCOM_VIP_CLI_Command {
 			WP_CLI::log( "Dry run: Would transform post {$post_id} (\"{$post->post_title}\") using provider \"{$provider_slug}\"." );
 			$status = Transformation_Cache::get_status( $post_id, $provider_slug );
 			WP_CLI::log( "Current cache status: {$status}" );
-			WP_CLI::log( "Force: " . ( $force ? 'yes' : 'no' ) );
+			WP_CLI::log( 'Force: ' . ( $force ? 'yes' : 'no' ) );
 			return;
 		}
 
@@ -95,14 +97,16 @@ class CLI_Command extends \WPCOM_VIP_CLI_Command {
 		$result = Transformation_Pipeline::transform( $post_id, $provider_slug, $force );
 
 		if ( ! $result->is_success() ) {
-			WP_CLI::error( "Transformation failed: " . $result->get_error() );
+			WP_CLI::error( 'Transformation failed: ' . $result->get_error() );
 		}
 
-		WP_CLI::success( sprintf(
-			'Transformation complete. Status: %s. Tokens: %d.',
-			$result->get_status(),
-			$result->get_tokens_used()
-		) );
+		WP_CLI::success(
+			sprintf(
+				'Transformation complete. Status: %s. Tokens: %d.',
+				$result->get_status(),
+				$result->get_tokens_used()
+			)
+		);
 
 		if ( $output_file ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
@@ -122,6 +126,8 @@ class CLI_Command extends \WPCOM_VIP_CLI_Command {
 	 *     $ wp prc content-transformer providers
 	 *
 	 * @subcommand providers
+	 * @param array $args       Positional arguments.
+	 * @param array $assoc_args Associative arguments.
 	 */
 	public function providers( $args, $assoc_args ) {
 		$providers = Provider_Registry::get_all();
@@ -173,13 +179,15 @@ class CLI_Command extends \WPCOM_VIP_CLI_Command {
 
 		$status = Transformation_Cache::get_status( $post_id, $provider_slug );
 
-		WP_CLI::log( sprintf(
-			'Post %d (%s) — Provider: %s — Status: %s',
-			$post_id,
-			$post->post_title,
-			$provider_slug,
-			$status
-		) );
+		WP_CLI::log(
+			sprintf(
+				'Post %d (%s) — Provider: %s — Status: %s',
+				$post_id,
+				$post->post_title,
+				$provider_slug,
+				$status
+			)
+		);
 	}
 
 	/**

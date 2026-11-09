@@ -6,6 +6,8 @@
  * @package PRC\Platform\Content_Transformer\Pipeline
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\Pipeline;
 
 use PRC\Platform\Content_Transformer\Providers\Provider;

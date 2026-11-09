@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\Providers
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\Providers;
 
 /**
@@ -12,23 +14,43 @@ namespace PRC\Platform\Content_Transformer\Providers;
  */
 class Email_Provider implements Provider {
 
+	/**
+	 * Human-readable provider name.
+	 *
+	 * @return string
+	 */
 	public function get_name(): string {
 		return 'Email HTML';
 	}
 
+	/**
+	 * Unique provider slug.
+	 *
+	 * @return string
+	 */
 	public function get_slug(): string {
 		return 'email';
 	}
 
+	/**
+	 * Format specification sent to the AI model.
+	 *
+	 * @return string
+	 */
 	public function get_format_spec(): string {
 		$spec_path = PRC_CONTENT_TRANSFORMER_DIR . '/includes/format-specs/email-html.md';
 		if ( file_exists( $spec_path ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			return file_get_contents( $spec_path );
+			return (string) file_get_contents( $spec_path );
 		}
 		return '';
 	}
 
+	/**
+	 * Output content type.
+	 *
+	 * @return string
+	 */
 	public function get_output_type(): string {
 		return 'html';
 	}
@@ -74,15 +96,15 @@ class Email_Provider implements Provider {
 		$output = trim( $output );
 
 		// Strip opening code fence (```html, ```HTML, or bare ```) from start.
-		$output = preg_replace( '/^```(?:html|HTML)?\s*\n?/', '', $output );
+		$output = (string) preg_replace( '/^```(?:html|HTML)?\s*\n?/', '', $output );
 
 		// Strip closing code fence from end.
-		$output = preg_replace( '/\n?```\s*$/', '', $output );
+		$output = (string) preg_replace( '/\n?```\s*$/', '', $output );
 
-		$output = trim( (string) $output );
+		$output = trim( $output );
 
 		// Replace any literal spacer tokens the model left in place (table-safe).
-		$output = preg_replace_callback(
+		$output = (string) preg_replace_callback(
 			'/\{\{PRC_EMAIL_SPACER\s+height="(\d+(?:\.\d+)?)px"\}\}/',
 			static function ( array $m ): string {
 				$h = (int) max( 1, min( 500, (int) ceil( (float) $m[1] ) ) );
@@ -100,13 +122,18 @@ class Email_Provider implements Provider {
 					'Email HTML output contained unresolved {{PRC_EMAIL_TYPOGRAPHY}} markers; stripped before send.'
 				);
 			}
-			$output = preg_replace( '/\{\{PRC_EMAIL_TYPOGRAPHY[^}]+\}\}\s*/', '', $output );
-			$output = preg_replace( '/\s*\{\{\/PRC_EMAIL_TYPOGRAPHY\}\}/', '', $output );
+			$output = (string) preg_replace( '/\{\{PRC_EMAIL_TYPOGRAPHY[^}]+\}\}\s*/', '', $output );
+			$output = (string) preg_replace( '/\s*\{\{\/PRC_EMAIL_TYPOGRAPHY\}\}/', '', $output );
 		}
 
-		return trim( (string) $output );
+		return trim( $output );
 	}
 
+	/**
+	 * Whether the provider can run on this site.
+	 *
+	 * @return bool
+	 */
 	public function is_available(): bool {
 		return true;
 	}

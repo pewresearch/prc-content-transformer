@@ -22,6 +22,8 @@
  * Requires Plugins:  prc-shared
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer;
 
 // If this file is called directly, abort.

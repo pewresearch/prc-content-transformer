@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\Providers
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\Providers;
 
 /**
@@ -12,23 +14,43 @@ namespace PRC\Platform\Content_Transformer\Providers;
  */
 class Apple_News_Provider implements Provider {
 
+	/**
+	 * Human-readable provider name.
+	 *
+	 * @return string
+	 */
 	public function get_name(): string {
 		return 'Apple News';
 	}
 
+	/**
+	 * Unique provider slug.
+	 *
+	 * @return string
+	 */
 	public function get_slug(): string {
 		return 'apple-news';
 	}
 
+	/**
+	 * Format specification sent to the AI model.
+	 *
+	 * @return string
+	 */
 	public function get_format_spec(): string {
 		$spec_path = PRC_CONTENT_TRANSFORMER_DIR . '/includes/format-specs/apple-news.md';
 		if ( file_exists( $spec_path ) ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-			return file_get_contents( $spec_path );
+			return (string) file_get_contents( $spec_path );
 		}
 		return '';
 	}
 
+	/**
+	 * Output content type.
+	 *
+	 * @return string
+	 */
 	public function get_output_type(): string {
 		return 'json';
 	}
@@ -146,20 +168,20 @@ class Apple_News_Provider implements Provider {
 			$ord  = ord( $char );
 
 			if ( $escaped ) {
-				$result  .= $char;
-				$escaped  = false;
+				$result .= $char;
+				$escaped = false;
 				continue;
 			}
 
 			if ( $in_string ) {
 				if ( '\\' === $char ) {
-					$result  .= $char;
-					$escaped  = true;
+					$result .= $char;
+					$escaped = true;
 					continue;
 				}
 				if ( '"' === $char ) {
-					$result    .= $char;
-					$in_string  = false;
+					$result   .= $char;
+					$in_string = false;
 					continue;
 				}
 				// Escape any literal control character inside a string value.
@@ -189,8 +211,8 @@ class Apple_News_Provider implements Provider {
 				$result .= $char;
 			} else {
 				if ( '"' === $char ) {
-					$result    .= $char;
-					$in_string  = true;
+					$result   .= $char;
+					$in_string = true;
 					continue;
 				}
 				$result .= $char;
@@ -200,6 +222,11 @@ class Apple_News_Provider implements Provider {
 		return $result;
 	}
 
+	/**
+	 * Whether the provider can run on this site.
+	 *
+	 * @return bool
+	 */
 	public function is_available(): bool {
 		return true;
 	}

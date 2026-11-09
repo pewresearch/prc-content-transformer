@@ -5,6 +5,8 @@
  * @package PRC\Platform\Content_Transformer\Cache
  */
 
+declare(strict_types=1);
+
 namespace PRC\Platform\Content_Transformer\Cache;
 
 use PRC\Platform\Content_Transformer\Loader;
@@ -23,6 +25,8 @@ class Transformation_Cache {
 	const META_PREFIX = '_prc_ct_';
 
 	/**
+	 * Register the save_post invalidation hook.
+	 *
 	 * @param Loader $loader The hook loader.
 	 */
 	public function __construct( Loader $loader ) {
@@ -177,13 +181,13 @@ class Transformation_Cache {
 		if ( function_exists( 'as_get_scheduled_actions' ) ) {
 			$actions = as_get_scheduled_actions(
 				array(
-					'hook'   => 'prc_content_transformer_process',
-					'status' => array(
+					'hook'                  => 'prc_content_transformer_process',
+					'status'                => array(
 						\ActionScheduler_Store::STATUS_PENDING,
 						\ActionScheduler_Store::STATUS_RUNNING,
 					),
-					'group'  => 'prc-content-transformer',
-					'args'   => array(
+					'group'                 => 'prc-content-transformer',
+					'args'                  => array(
 						'post_id'  => $post_id,
 						'provider' => $provider_slug,
 					),
